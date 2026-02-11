@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <div class="pill mb-2">Gestion</div>
+      <h1 class="h4 mb-0">Bureaux</h1>
+    </div>
+    <a class="btn btn-outline-secondary" href="/admin">Retour</a>
+  </div>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h2 class="h6">Ajouter un bureau</h2>
+      <form method="post" class="row g-2">
+        <div class="col-md-4">
+          <input class="form-control" name="code_bureau" placeholder="Code bureau" />
+        </div>
+        <div class="col-md-6">
+          <input class="form-control" name="nom_bureau" placeholder="Nom bureau" />
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-primary w-100" type="submit">Creer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Nom</th>
+          <th>Province</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for b in bureaux %}
+          <tr>
+            <td>{{ b["code_bureau"] }}</td>
+            <td>{{ b["nom_bureau"] }}</td>
+            <td>{{ b["province"] or "-" }}</td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="3" class="text-muted">Aucun bureau.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

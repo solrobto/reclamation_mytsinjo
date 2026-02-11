@@ -1,0 +1,5 @@
+Flask
+Flask-Login
+Werkzeug
+win10toast
+pg8000

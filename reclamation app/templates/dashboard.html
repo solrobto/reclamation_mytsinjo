@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+      <h1 class="h3 mb-0">
+        {% if archived %}Reclamations archivees{% else %}Suivi des reclamations{% endif %}
+      </h1>
+      <p class="text-muted mb-0">
+        {% if archived %}
+          Historique archive. Vous pouvez restaurer si besoin.
+        {% else %}
+          Filtrez, verifiez et validez rapidement
+        {% endif %}
+      </p>
+      <p class="text-muted mb-0">
+        {{ current_user.prenom }} {{ current_user.nom }}{% if current_user.matricule %} - {{ current_user.matricule }}{% endif %}
+      </p>
+    </div>
+    <div class="d-flex gap-2">
+      {% if archived %}
+        <a class="btn btn-outline-secondary" href="/dashboard">Voir actives</a>
+      {% else %}
+        <a class="btn btn-outline-secondary" href="/dashboard?archived=1">Voir archivees</a>
+      {% endif %}
+      {% if current_user.role == "agent" %}
+      <a class="btn btn-primary" href="/reclamation/new">Nouvelle reclamation</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <form class="row g-3 mb-4" method="get">
+    {% if archived %}
+      <input type="hidden" name="archived" value="1" />
+    {% endif %}
+    <div class="col-md-3">
+      <input class="form-control" name="search" placeholder="Recherche" value="{{ search }}" />
+    </div>
+    <div class="col-md-3">
+      <select class="form-select" name="type_id">
+        <option value="">Tous les types</option>
+        {% for t in types %}
+          <option value="{{ t['id'] }}" {% if type_id == t['id']|string %}selected{% endif %}>
+            {{ t['libelle'] }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select class="form-select" name="statut">
+        <option value="">Tous les statuts</option>
+        <option value="EN_ATTENTE" {% if statut == "EN_ATTENTE" %}selected{% endif %}>EN_ATTENTE</option>
+        <option value="EN_COURS" {% if statut == "EN_COURS" %}selected{% endif %}>EN_COURS</option>
+        <option value="TRAITEE" {% if statut == "TRAITEE" %}selected{% endif %}>TRAITEE</option>
+        <option value="REJETEE" {% if statut == "REJETEE" %}selected{% endif %}>REJETEE</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <select class="form-select" name="bureau_id">
+        <option value="">Tous les bureaux</option>
+        {% for b in bureaux %}
+          <option value="{{ b['id'] }}" {% if bureau_id == b['id']|string %}selected{% endif %}>
+            {{ b['nom_bureau'] }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-outline-secondary w-100" type="submit">Filtrer</button>
+    </div>
+  </form>
+
+  <div class="table-responsive card p-3">
+    <table class="table table-striped align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Numero</th>
+          <th>Client</th>
+          <th>Compte</th>
+          <th>Type</th>
+          <th>Bureau</th>
+          <th>Statut</th>
+          <th>Soumis par</th>
+          <th>Date</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in reclamations %}
+          <tr>
+            <td>{{ r["numero_dossier"] or "En cours" }}</td>
+            <td>{{ r["nom_client"] }}</td>
+            <td>{{ r["numero_compte"] }}</td>
+            <td>{{ r["libelle"] or "-" }}</td>
+            <td>{{ r["nom_bureau"] or "-" }}</td>
+            <td>{{ r["statut"] }}</td>
+            <td>{{ r["username"] or "-" }}</td>
+            <td>{{ r["created_at"] }}</td>
+            <td>
+              <div class="d-flex gap-2">
+                <a class="btn btn-sm btn-outline-primary" href="/reclamation/{{ r['id'] }}">Voir</a>
+                {% if current_user.role in ["supervisor", "admin"] %}
+                  {% if archived %}
+                    <form method="post" action="/reclamation/{{ r['id'] }}/unarchive">
+                      <button class="btn btn-sm btn-outline-secondary" type="submit">Restaurer</button>
+                    </form>
+                  {% elif r["statut"] == "TRAITEE" %}
+                    <form method="post" action="/reclamation/{{ r['id'] }}/archive">
+                      <button class="btn btn-sm btn-outline-secondary" type="submit">Archiver</button>
+                    </form>
+                  {% endif %}
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="9" class="text-muted">Aucune reclamation.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

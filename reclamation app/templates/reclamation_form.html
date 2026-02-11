@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <div class="pill mb-2">Formulaire officiel</div>
+      <h1 class="h4 mb-3">Nouvelle réclamation</h1>
+      {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+      {% endif %}
+      <form method="post" enctype="multipart/form-data">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Numéro de compte Mytsinjo ID</label>
+            <input class="form-control" name="numero_compte" value="{{ numero_compte }}" />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Nom du client</label>
+            <input class="form-control" name="nom_client" value="{{ nom_client }}" />
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Type de réclamation</label>
+          <select class="form-select" name="type_id">
+            <option value="">Selectionner</option>
+            {% for t in types %}
+              <option value="{{ t['id'] }}" {% if type_id == t['id']|string %}selected{% endif %}>
+                {{ t['libelle'] }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Ancienne information</label>
+            <input class="form-control" name="ancienne_valeur" value="{{ ancienne_valeur }}" />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Nouvelle information demandée</label>
+            <input class="form-control" name="nouvelle_valeur" value="{{ nouvelle_valeur }}" />
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Motif detaillé</label>
+          <textarea class="form-control" name="motif" rows="4">{{ motif }}</textarea>
+          <div class="form-text">Pour le type Autre, la justification est obligatoire.</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Pieces jointes (PDF ou image)</label>
+          <input class="form-control" type="file" name="pieces" multiple accept=".pdf,.jpg,.jpeg,.png" />
+          <div class="form-text">Optionnel. Vous pouvez selectionner plusieurs fichiers.</div>
+        </div>
+        <button class="btn btn-primary" type="submit">Soumettre</button>
+        <a class="btn btn-outline-secondary" href="/dashboard">Annuler</a>
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <div class="pill mb-2">Gestion</div>
+      <h1 class="h4 mb-0">Types de reclamation</h1>
+    </div>
+    <a class="btn btn-outline-secondary" href="/admin">Retour</a>
+  </div>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h2 class="h6">Ajouter un type</h2>
+      <form method="post" class="row g-2">
+        <div class="col-md-3">
+          <input class="form-control" name="code" placeholder="Code" />
+        </div>
+        <div class="col-md-7">
+          <input class="form-control" name="libelle" placeholder="Libelle" />
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-primary w-100" type="submit">Creer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Libelle</th>
+          <th>Actif</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in types %}
+          <tr>
+            <td>{{ t["code"] }}</td>
+            <td>{{ t["libelle"] }}</td>
+            <td>{{ "Oui" if t["actif"] == 1 else "Non" }}</td>
+            <td>
+              <form method="post" action="/admin/types/{{ t['id'] }}/toggle">
+                <button class="btn btn-sm btn-outline-secondary" type="submit">
+                  {% if t["actif"] == 1 %}Desactiver{% else %}Activer{% endif %}
+                </button>
+              </form>
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="4" class="text-muted">Aucun type.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

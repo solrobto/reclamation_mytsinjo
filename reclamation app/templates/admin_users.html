@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <div class="pill mb-2">Gestion</div>
+      <h1 class="h4 mb-0">Utilisateurs</h1>
+    </div>
+    <a class="btn btn-outline-secondary" href="/admin">Retour</a>
+  </div>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h2 class="h6">Ajouter un utilisateur</h2>
+      {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+      {% endif %}
+      <form method="post">
+        <div class="row">
+          <div class="col-md-3 mb-2">
+            <input class="form-control" name="username" placeholder="Utilisateur" />
+          </div>
+          <div class="col-md-2 mb-2">
+            <input class="form-control" name="prenom" placeholder="Prenom" />
+          </div>
+          <div class="col-md-2 mb-2">
+            <input class="form-control" name="nom" placeholder="Nom" />
+          </div>
+          <div class="col-md-2 mb-2">
+            <input class="form-control" name="matricule" placeholder="Matricule" />
+          </div>
+          <div class="col-md-2 mb-2">
+            <input class="form-control" type="password" name="password" placeholder="Mot de passe" />
+          </div>
+          <div class="col-md-1 mb-2">
+            <select class="form-select" name="role">
+              <option value="agent">agent</option>
+              <option value="supervisor">supervisor</option>
+              <option value="admin">admin</option>
+            </select>
+          </div>
+          <div class="col-md-2 mb-2">
+            <select class="form-select" name="bureau_id">
+              <option value="">Bureau</option>
+              {% for b in bureaux %}
+                <option value="{{ b['id'] }}">{{ b['nom_bureau'] }} ({{ b['code_bureau'] }})</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-1 mb-2">
+            <button class="btn btn-primary w-100" type="submit">Creer</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>Utilisateur</th>
+          <th>Prenom</th>
+          <th>Nom</th>
+          <th>Matricule</th>
+          <th>Role</th>
+          <th>Bureau</th>
+          <th>Actif</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+          <tr>
+            <td>{{ u["username"] }}</td>
+            <td>{{ u["prenom"] or "-" }}</td>
+            <td>{{ u["nom"] or "-" }}</td>
+            <td>{{ u["matricule"] or "-" }}</td>
+            <td>{{ u["role"] }}</td>
+            <td>{{ u["nom_bureau"] or "-" }}</td>
+            <td>
+              {% if u["active"] == 1 %}
+                Oui
+              {% else %}
+                <span class="pill">En attente</span>
+              {% endif %}
+            </td>
+            <td>
+              <div class="d-flex gap-2">
+                <form method="post" action="/admin/users/{{ u['id'] }}/update" class="d-flex gap-2">
+                  <select class="form-select form-select-sm" name="role">
+                    <option value="agent" {% if u["role"] == "agent" %}selected{% endif %}>agent</option>
+                    <option value="supervisor" {% if u["role"] == "supervisor" %}selected{% endif %}>supervisor</option>
+                    <option value="admin" {% if u["role"] == "admin" %}selected{% endif %}>admin</option>
+                  </select>
+                  <select class="form-select form-select-sm" name="bureau_id">
+                    <option value="">Bureau</option>
+                    {% for b in bureaux %}
+                      <option value="{{ b['id'] }}" {% if u["bureau_id"] == b["id"] %}selected{% endif %}>
+                        {{ b["nom_bureau"] }}
+                      </option>
+                    {% endfor %}
+                  </select>
+                  <select class="form-select form-select-sm" name="active">
+                    <option value="1" {% if u["active"] == 1 %}selected{% endif %}>Actif</option>
+                    <option value="0" {% if u["active"] == 0 %}selected{% endif %}>Inactif</option>
+                  </select>
+                  <button class="btn btn-sm btn-outline-primary" type="submit">Maj</button>
+                </form>
+                <form method="post" action="/admin/users/{{ u['id'] }}/delete">
+                  <button class="btn btn-sm btn-outline-danger" type="submit">Supprimer</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="5" class="text-muted">Aucun utilisateur.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

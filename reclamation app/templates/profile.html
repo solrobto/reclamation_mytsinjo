@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-md-7">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="pill mb-2">Profil</div>
+          <h1 class="h4 mb-3">Edition des informations de base</h1>
+          {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+          {% endif %}
+          <form method="post">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Prenom</label>
+                <input class="form-control" name="prenom" value="{{ current_user.prenom }}" />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Nom</label>
+                <input class="form-control" name="nom" value="{{ current_user.nom }}" />
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Matricule</label>
+              <input class="form-control" name="matricule" value="{{ current_user.matricule }}" />
+            </div>
+            <button class="btn btn-primary" type="submit">Enregistrer</button>
+            <a class="btn btn-outline-secondary" href="/dashboard">Retour</a>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

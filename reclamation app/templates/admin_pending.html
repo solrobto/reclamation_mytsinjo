@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <div class="pill mb-2">Validation</div>
+      <h1 class="h4 mb-0">Utilisateurs en attente</h1>
+    </div>
+    <a class="btn btn-outline-secondary" href="/admin">Retour</a>
+  </div>
+
+  <div class="table-responsive card p-2">
+    <table class="table table-striped align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Utilisateur</th>
+          <th>Prenom</th>
+          <th>Nom</th>
+          <th>Matricule</th>
+          <th>Role</th>
+          <th>Bureau</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in pending %}
+          <tr>
+            <td>{{ u["username"] }}</td>
+            <td>{{ u["prenom"] or "-" }}</td>
+            <td>{{ u["nom"] or "-" }}</td>
+            <td>{{ u["matricule"] or "-" }}</td>
+            <td>{{ u["role"] }}</td>
+            <td>{{ u["nom_bureau"] or "-" }}</td>
+            <td class="text-end">
+              <form method="post" class="d-inline">
+                <input type="hidden" name="user_id" value="{{ u['id'] }}" />
+                <input type="hidden" name="action" value="approve" />
+                <button class="btn btn-sm btn-primary" type="submit">Valider</button>
+              </form>
+              <form method="post" class="d-inline ms-2">
+                <input type="hidden" name="user_id" value="{{ u['id'] }}" />
+                <input type="hidden" name="action" value="reject" />
+                <button class="btn btn-sm btn-outline-secondary" type="submit">Refuser</button>
+              </form>
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="7" class="text-muted">Aucun utilisateur en attente.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

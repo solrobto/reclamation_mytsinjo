@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="pill mb-2">Administration</div>
+  <h1 class="h3 mb-3">Admin</h1>
+  <div class="row g-3">
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="text-muted">Utilisateurs</div>
+          <div class="h4">{{ counts["users"] }}</div>
+          <a href="/admin/users">Gerer</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="text-muted">En attente</div>
+          <div class="h4">{{ counts["pending"] }}</div>
+          <a href="/admin/pending">Valider</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="text-muted">Bureaux</div>
+          <div class="h4">{{ counts["bureaux"] }}</div>
+          <a href="/admin/bureaux">Gerer</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="text-muted">Types</div>
+          <div class="h4">{{ counts["types"] }}</div>
+          <a href="/admin/types">Gerer</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="text-muted">Reclamations</div>
+          <div class="h4">{{ counts["reclamations"] }}</div>
+          <a href="/dashboard">Voir</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

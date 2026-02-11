@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ title or "Reclamation Mytsinjo" }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body class="bg-light">
+    <style>
+      :root {
+        --ink: #0f172a;
+        --muted: #5b6b7a;
+        --sky: #38bdf8;
+        --sky-deep: #0284c7;
+        --sun: #facc15;
+        --sun-deep: #eab308;
+        --flare: #ef4444;
+        --card: #ffffff;
+        --shadow: 0 18px 40px rgba(2, 132, 199, 0.18);
+        --glass: rgba(255, 255, 255, 0.6);
+      }
+      body {
+        font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(1100px 700px at 10% -20%, rgba(56, 189, 248, 0.35) 0%, transparent 60%),
+          radial-gradient(900px 600px at 90% 0%, rgba(250, 204, 21, 0.35) 0%, transparent 55%),
+          linear-gradient(130deg, #eef9ff 0%, #fff6cc 45%, #ffffff 100%);
+        min-height: 100vh;
+      }
+      h1, h2, h3, .navbar-brand {
+        font-family: "Space Grotesk", "IBM Plex Sans", sans-serif;
+        letter-spacing: -0.02em;
+      }
+      .app-shell {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        min-height: 100vh;
+      }
+      .sidebar {
+        background:
+          radial-gradient(400px 260px at 20% 0%, rgba(250, 204, 21, 0.35), transparent 60%),
+          linear-gradient(180deg, #0ea5e9 0%, #0284c7 55%, #ef4444 120%);
+        color: #fff;
+        padding: 24px 20px;
+      }
+      .brand {
+        font-weight: 700;
+        font-size: 1.1rem;
+        letter-spacing: -0.01em;
+      }
+      .brand-logo {
+        width: 100%;
+        max-width: 160px;
+        height: auto;
+        display: block;
+        margin: 0 auto 12px;
+        border-radius: 12px;
+      }
+      .nav-link {
+        color: rgba(255, 255, 255, 0.9);
+        border-radius: 12px;
+        padding: 10px 12px;
+        margin-bottom: 6px;
+      }
+      .nav-link.active, .nav-link:hover {
+        background: rgba(255, 255, 255, 0.18);
+        color: #fff;
+      }
+      .sidebar .user-card {
+        background: rgba(255, 255, 255, 0.18);
+        border-radius: 16px;
+        padding: 14px;
+        margin: 18px 0 12px;
+      }
+      .content {
+        padding: 28px 34px;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      .card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+        background: var(--glass);
+        backdrop-filter: blur(8px);
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, var(--sky), var(--sky-deep));
+        border: none;
+        box-shadow: 0 12px 22px rgba(2, 132, 199, 0.35);
+      }
+      .btn-primary:hover {
+        background: linear-gradient(135deg, var(--sky-deep), var(--sky));
+      }
+      .btn-danger {
+        background: linear-gradient(135deg, var(--flare), #f97316);
+        border: none;
+        box-shadow: 0 10px 20px rgba(239, 68, 68, 0.35);
+      }
+      .btn-warning {
+        background: linear-gradient(135deg, var(--sun), var(--sun-deep));
+        border: none;
+        color: #1f2937;
+        box-shadow: 0 10px 20px rgba(250, 204, 21, 0.35);
+      }
+      .btn-outline-secondary {
+        border-color: rgba(31, 31, 46, 0.2);
+        color: var(--ink);
+      }
+      .pill {
+        display: inline-flex;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        background: rgba(56, 189, 248, 0.15);
+        color: var(--sky-deep);
+      }
+      .table {
+        background: #fff;
+        border-radius: 16px;
+        overflow: hidden;
+      }
+      .toast {
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+      }
+      .toast-header {
+        background: #f6f0ff;
+        color: var(--purple-dark);
+        border-bottom: none;
+      }
+      .toast-body {
+        color: var(--ink);
+      }
+      @media (max-width: 991px) {
+        .app-shell {
+          grid-template-columns: 1fr;
+        }
+        .sidebar {
+          position: sticky;
+          top: 0;
+          z-index: 2;
+        }
+        .content {
+          padding: 18px;
+        }
+      }
+    </style>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <img
+          class="brand-logo"
+          src="{{ url_for('static', filename='logo_epargnes.png') }}"
+          alt="Logo epargnes"
+        />
+        <div class="brand">Reclamation Mytsinjo</div>
+        {% if current_user.is_authenticated %}
+          <div class="user-card">
+            <div class="fw-semibold">
+              {{ current_user.prenom }} {{ current_user.nom }}
+            </div>
+            <div class="small text-white-50">
+              {{ current_user.matricule }} - {{ current_user.role }}
+            </div>
+          </div>
+        {% endif %}
+        <nav class="nav flex-column mt-2">
+          <a class="nav-link" href="/">Accueil</a>
+          <a class="nav-link" href="/dashboard">Dashboard</a>
+          {% if current_user.is_authenticated %}
+            {% if current_user.role == "agent" %}
+              <a class="nav-link" href="/reclamation/new">Nouvelle reclamation</a>
+            {% endif %}
+            <a class="nav-link" href="/profile">Profil</a>
+            {% if current_user.role == "admin" %}
+              <a class="nav-link" href="/admin">Administration</a>
+            {% endif %}
+            <a class="nav-link" href="/logout">Deconnexion</a>
+          {% else %}
+            <a class="nav-link" href="/login">Connexion</a>
+            <a class="nav-link" href="/register">Creer un compte</a>
+          {% endif %}
+        </nav>
+      </aside>
+      <main class="content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} mb-3" role="alert">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+        <footer class="mt-auto pt-4 text-muted small text-center">
+            (c) 2026 RAKOTONAIVO Solofojaona Roberto.
+        </footer>
+      </main>
+    </div>
+    <div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1080;"></div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+      crossorigin="anonymous"
+    ></script>
+    {% if current_user.is_authenticated and current_user.role in ["admin", "supervisor"] %}
+      <script>
+        (function () {
+          const endpoint = "{{ url_for('admin.notifications') }}";
+          const storageKey = "reclamation_notifications_v1";
+          const pollMs = 20000;
+
+          function readState() {
+            try {
+              return JSON.parse(localStorage.getItem(storageKey)) || { initialized: false };
+            } catch (err) {
+              return { initialized: false };
+            }
+          }
+
+          function writeState(state) {
+            localStorage.setItem(storageKey, JSON.stringify(state));
+          }
+
+          function showToast(title, body) {
+            const container = document.getElementById("toast-container");
+            if (!container) return;
+            const toastEl = document.createElement("div");
+            toastEl.className = "toast align-items-start";
+            toastEl.setAttribute("role", "alert");
+            toastEl.setAttribute("aria-live", "assertive");
+            toastEl.setAttribute("aria-atomic", "true");
+            toastEl.innerHTML = `
+              <div class="toast-header">
+                <strong class="me-auto">${title}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+              </div>
+              <div class="toast-body">${body}</div>
+            `;
+            container.appendChild(toastEl);
+            const toast = new bootstrap.Toast(toastEl, { delay: 7000 });
+            toast.show();
+            toastEl.addEventListener("hidden.bs.toast", () => toastEl.remove());
+          }
+
+          async function poll() {
+            try {
+              const response = await fetch(endpoint, { credentials: "same-origin" });
+              if (!response.ok) return;
+              const data = await response.json();
+              const state = readState();
+              if (!state.initialized) {
+                writeState({
+                  initialized: true,
+                  pending_reclamations: data.pending_reclamations,
+                  pending_users: data.pending_users,
+                });
+                return;
+              }
+
+              const prevReclamations = state.pending_reclamations ?? 0;
+              const prevUsers = state.pending_users ?? 0;
+              if (data.pending_reclamations > prevReclamations) {
+                const delta = data.pending_reclamations - prevReclamations;
+                const label = delta > 1 ? "nouvelles reclamations" : "nouvelle reclamation";
+                showToast("Nouvelle demande", `+${delta} ${label} en attente.`);
+              }
+              if (data.pending_users > prevUsers) {
+                const delta = data.pending_users - prevUsers;
+                const label = delta > 1 ? "utilisateurs" : "utilisateur";
+                showToast("Validation en attente", `+${delta} ${label} a valider.`);
+              }
+
+              writeState({
+                initialized: true,
+                pending_reclamations: data.pending_reclamations,
+                pending_users: data.pending_users,
+              });
+            } catch (err) {
+              // Ignore network errors
+            }
+          }
+
+          poll();
+          setInterval(poll, pollMs);
+        })();
+      </script>
+    {% endif %}
+  </body>
+</html>

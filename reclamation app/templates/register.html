@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-md-7">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h1 class="h4 mb-3">Creation de compte</h1>
+          {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+          {% endif %}
+          <form method="post">
+            <div class="mb-3">
+              <label class="form-label">Utilisateur</label>
+              <input class="form-control" name="username" />
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Prenom</label>
+                <input class="form-control" name="prenom" />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Nom</label>
+                <input class="form-control" name="nom" />
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Matricule</label>
+              <input class="form-control" name="matricule" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Mot de passe</label>
+              <input class="form-control" type="password" name="password" />
+            </div>
+            {% if allow_role %}
+              <div class="mb-3">
+                <label class="form-label">Role</label>
+                <select class="form-select" name="role">
+                  <option value="admin">admin</option>
+                  <option value="supervisor">supervisor</option>
+                  <option value="agent" selected>agent</option>
+                </select>
+              </div>
+            {% endif %}
+            <div class="mb-3">
+              <label class="form-label">Bureau</label>
+              <select class="form-select" name="bureau_id">
+                <option value="">Aucun</option>
+                {% for b in bureaux %}
+                  <option value="{{ b['id'] }}">{{ b['nom_bureau'] }} ({{ b['code_bureau'] }})</option>
+                {% endfor %}
+              </select>
+            </div>
+            <button class="btn btn-primary" type="submit">Creer</button>
+          </form>
+          <p class="mt-3 mb-0">
+            Deja un compte ?
+            <a href="/login">Se connecter</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
